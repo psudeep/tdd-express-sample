@@ -5,3 +5,4 @@
 - `npm test`
 - `npm run lint`
 - `npm run lint -- --fix`
+- `cross-env NODE_ENV=test jest --watchAll`
