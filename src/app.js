@@ -8,4 +8,6 @@ app.use(bodyParser.json());
 
 app.use(UserRouter);
 
+console.log("env is " + process.env.NODE_ENV);
+
 module.exports = app;
