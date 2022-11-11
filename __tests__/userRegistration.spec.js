@@ -20,52 +20,39 @@ describe("user registration", () => {
     });
   };
 
-  it("returns 200 OK when signup request is valid", (done) => {
-    postValidUser().then((response) => {
-      expect(response.status).toBe(200);
-      done();
-    });
+  it("returns 200 OK when signup request is valid", async () => {
+    const response = await postValidUser();
+    expect(response.status).toBe(200);
     // .expect(200, done);
   });
 
-  it("returns success message when signup request is valid", (done) => {
-    postValidUser().then((response) => {
-      expect(response.body.message).toBe("user created");
-      done();
-    });
+  it("returns success message when signup request is valid", async () => {
+    const response = await postValidUser();
+    expect(response.body.message).toBe("user created");
   });
 
-  it("save the user to database", (done) => {
-    postValidUser().then(() => {
-      // query the user table
-      User.findAll().then((userlist) => {
-        //   expect(userlist.length).toBe(1);
-        expect(userlist.length).toBeGreaterThan(0);
-        done();
-      });
-    });
+  it("save the user to database", async () => {
+    await postValidUser();
+    // query the user table
+    const userlist = await User.findAll();
+    //   expect(userlist.length).toBe(1);
+    expect(userlist.length).toBeGreaterThan(0);
   });
 
-  it("it saves username and email to database", (done) => {
-    postValidUser().then(() => {
-      // query the user table
-      User.findAll().then((userlist) => {
-        const savedUser = userlist[0];
-        expect(savedUser.username).toBe("user1");
-        expect(savedUser.email).toBe("easd@jsdf.sd");
-        done();
-      });
-    });
+  it("it saves username and email to database", async () => {
+    await postValidUser();
+    // query the user table
+    const userlist = await User.findAll();
+    const savedUser = userlist[0];
+    expect(savedUser.username).toBe("user1");
+    expect(savedUser.email).toBe("easd@jsdf.sd");
   });
 
-  it("it hashes the password in database", (done) => {
-    postValidUser().then(() => {
-      // query the user table
-      User.findAll().then((userlist) => {
-        const savedUser = userlist[0];
-        expect(savedUser.password).not.toBe("pass322");
-        done();
-      });
-    });
+  it("it hashes the password in database", async () => {
+    await postValidUser();
+    // query the user table
+    const userlist = await User.findAll();
+    const savedUser = userlist[0];
+    expect(savedUser.password).not.toBe("pass322");
   });
 });
