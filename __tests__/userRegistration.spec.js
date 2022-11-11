@@ -12,87 +12,60 @@ beforeEach(() => {
 });
 
 describe("user registration", () => {
+  const postValidUser = () => {
+    return request(app).post("/api/v1/users").send({
+      username: "user1",
+      email: "easd@jsdf.sd",
+      password: "pass322",
+    });
+  };
+
   it("returns 200 OK when signup request is valid", (done) => {
-    request(app)
-      .post("/api/v1/users")
-      .send({
-        username: "user1",
-        email: "easd@jsdf.sd",
-        password: "pass322",
-      })
-      .then((response) => {
-        expect(response.status).toBe(200);
-        done();
-      });
+    postValidUser().then((response) => {
+      expect(response.status).toBe(200);
+      done();
+    });
     // .expect(200, done);
   });
 
   it("returns success message when signup request is valid", (done) => {
-    request(app)
-      .post("/api/v1/users")
-      .send({
-        username: "user1",
-        email: "easd@jsdf.sd",
-        password: "pass322",
-      })
-      .then((response) => {
-        expect(response.body.message).toBe("user created");
-        done();
-      });
+    postValidUser().then((response) => {
+      expect(response.body.message).toBe("user created");
+      done();
+    });
   });
 
   it("save the user to database", (done) => {
-    request(app)
-      .post("/api/v1/users")
-      .send({
-        username: "user1",
-        email: "easd@jsdf.sd",
-        password: "pass322",
-      })
-      .then(() => {
-        // query the user table
-        User.findAll().then((userlist) => {
-          //   expect(userlist.length).toBe(1);
-          expect(userlist.length).toBeGreaterThan(0);
-          done();
-        });
+    postValidUser().then(() => {
+      // query the user table
+      User.findAll().then((userlist) => {
+        //   expect(userlist.length).toBe(1);
+        expect(userlist.length).toBeGreaterThan(0);
+        done();
       });
+    });
   });
 
   it("it saves username and email to database", (done) => {
-    request(app)
-      .post("/api/v1/users")
-      .send({
-        username: "user1",
-        email: "easd@jsdf.sd",
-        password: "pass322",
-      })
-      .then(() => {
-        // query the user table
-        User.findAll().then((userlist) => {
-          const savedUser = userlist[0];
-          expect(savedUser.username).toBe("user1");
-          expect(savedUser.email).toBe("easd@jsdf.sd");
-          done();
-        });
+    postValidUser().then(() => {
+      // query the user table
+      User.findAll().then((userlist) => {
+        const savedUser = userlist[0];
+        expect(savedUser.username).toBe("user1");
+        expect(savedUser.email).toBe("easd@jsdf.sd");
+        done();
       });
+    });
   });
 
   it("it hashes the password in database", (done) => {
-    request(app)
-      .post("/api/v1/users")
-      .send({
-        username: "user1",
-        email: "easd@jsdf.sd",
-        password: "pass322",
-      })
-      .then(() => {
-        // query the user table
-        User.findAll().then((userlist) => {
-          const savedUser = userlist[0];
-          expect(savedUser.password).not.toBe("pass322");
-          done();
-        });
+    postValidUser().then(() => {
+      // query the user table
+      User.findAll().then((userlist) => {
+        const savedUser = userlist[0];
+        expect(savedUser.password).not.toBe("pass322");
+        done();
       });
+    });
   });
 });
