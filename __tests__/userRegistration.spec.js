@@ -73,8 +73,26 @@ describe("user registration", () => {
           const savedUser = userlist[0];
           expect(savedUser.username).toBe("user1");
           expect(savedUser.email).toBe("easd@jsdf.sd");
+          done();
         });
-        done();
+      });
+  });
+
+  it("it hashes the password in database", (done) => {
+    request(app)
+      .post("/api/v1/users")
+      .send({
+        username: "user1",
+        email: "easd@jsdf.sd",
+        password: "pass322",
+      })
+      .then(() => {
+        // query the user table
+        User.findAll().then((userlist) => {
+          const savedUser = userlist[0];
+          expect(savedUser.password).not.toBe("pass322");
+          done();
+        });
       });
   });
 });
